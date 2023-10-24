@@ -1,6 +1,19 @@
 from math import floor, log2
 from itertools import permutations, combinations
 from random import randrange, random
+
+def makeBinary_fixed(n,l):
+    """returns a string representing an integer in binary"""
+    rem = n
+    oupt = ""
+    for i in range(l):
+        #print(2**(l-i-1))
+        if rem >= 2**(l-i-1):
+            oupt += "1"
+            rem -= 2**(l-i-1)
+        else:
+            oupt += "0"
+    return(oupt)
 def randomBinary(n):
     """Returns random binary string of length n"""
     oupt = ""
@@ -212,36 +225,43 @@ def Mutual_Compression_ratio(s1,s2, zip = False):
 
     else:
         s12 = s1 + s2
-        ia = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
+        ia = [0,1]
     return(lzCompression_ratio(s1, ia = ia)+lzCompression_ratio(s2, ia= ia)-2*lzCompression_ratio(s12, ia = ia))
 
 def Mutual_Compression_ratio1(s1,s2):
-    ia = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
+    ia = [0,1]
     return(lzCompression_ratio(s1, ia = ia)+lzCompression_ratio(s2, ia= ia)-Conditional_Comrpession(s1,s2))
 
-def Mutual_Compression_ratio2(s1,s2):
-    ia = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
-    return(lzCompression_ratio(s2,ia = ia)-Conditional_Comrpession(s1,s2))
+
 
 
 def Mutual_Compression_Crossed(s1,s2):
-    ia = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
-    (s1Encoded,s1Dic) = lzEncoder(s1, input_alphabet = ia, input_dictionary = False, output_dictionary = True)
-    (s2Encoded,s2Dic) = lzEncoder(s2, input_alphabet = ia, input_dictionary = False, output_dictionary = True)
+    (s1Encoded,s1Dic) = lzEncoder(s1, input_alphabet = [0,1], input_dictionary = False, output_dictionary = True)
+    (s2Encoded,s2Dic) = lzEncoder(s2, input_alphabet = [0,1], input_dictionary = False, output_dictionary = True)
 
-    (s1Encoded2,s1Dic2) = lzEncoder(s1, input_alphabet = s2Dic, input_dictionary = s2Dic, output_dictionary = True)
-    (s2Encoded2,s2Dic2) = lzEncoder(s2, input_alphabet = s1Dic, input_dictionary = s1Dic, output_dictionary = True)
+    (s1Encoded2,s1Dic2) = lzEncoder(s1, input_alphabet = [0,1], input_dictionary = s2Dic, output_dictionary = True)
+    (s2Encoded2,s2Dic2) = lzEncoder(s2, input_alphabet = [0,1], input_dictionary = s1Dic, output_dictionary = True)
 
     return(
-        (len("".join(s1Encoded2)) + len("".join(s2Encoded2)))/(len(s1))# try deviding by n instead of 2n
+        (len("".join(s1Encoded2)) + len("".join(s2Encoded2)))/(len(s1)+len(s2))# try deviding by n instead of 2n
     )
 
+def Mutual_Compression_ratio_Crossed(s1,s2):
+    ia = [0,1]
+    return(lzCompression_ratio(s1, ia = ia)+lzCompression_ratio(s2, ia= ia)-Mutual_Compression_Crossed(s1,s2))
+
 def Conditional_Comrpession(s2,s1):
-    ia = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
-    (s1Encoded,s1Dic) = lzEncoder(s1, input_alphabet = ia,output_dictionary = True)
+    (s1Encoded,s1Dic) = lzEncoder(s1, output_dictionary = True)
     (s12Encoded,s12Dic) = lzEncoder(s2, input_dictionary = s1Dic, output_dictionary = True)
     return(len("".join(s12Encoded))/ len(s1))
 
+
+def Mutual_Compression_ratio2(s1,s2):
+    return(lzCompression_ratio(s2)-Conditional_Comrpession(s1,s2))
+
+s1 = "00"*5000
+s2 = "1011"*2500
+print(Mutual_Compression_ratio2(s1,s2))
 
 """A = ["#","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W", "X", "Y","Z"]
 s = "TOBEORNOTTOBEORTOBEORNOT"
@@ -305,6 +325,14 @@ def SigCHAMP(alp,n):
         oupt = SigCHAMP_helper(alp,n,oupt=oupt, lastjoin = alp)
     return(oupt[:n])
 s1 = randomBinary_prob(100000,0.5)
+
+
+
+
+
+s1 = "Title: The Last StandAct I: The USS Enterprise is on a routine mission to explore a remote planet when they detect a distress signal coming from a nearby starbase. The crew responds to the call and finds that the starbase is under attack by a group of hostile aliens. Captain Kirk and the landing party beam down to assess the situation and plan a strategy to defend the starbase.Act II:As the crew fights off the invading aliens, they discover that the enemy is not just trying to conquer the starbase, but is seeking to destroy it completely. The crew realizes that this attack is part of a larger campaign by the alien race to eradicate all human colonies in the sector. Captain Kirk and his crew must not only defend the starbase but also protect the lives of the civilians who have taken refuge there.Act III:The crew works to fortify the starbase and prepare for the next wave of the enemy's attack. The tension mounts as the crew faces a seemingly insurmountable challenge. As the battle rages on, Captain Kirk orders his crew to hold their ground and protect the starbase at all costs."
+
+
 
 #print(lzCompression_ratio(randomBinary_prob(100000,0.5), ia = [0,1]))
 #print(SigCHAMP(K_BalancedAphabet(1),10000))
