@@ -140,8 +140,9 @@ def isInDict(s,d):
     return((False,0))
 
 
-def lzEncoder(s, input_alphabet = [0,1], input_dictionary = False, output_dictionary = False):
+def lzEncoder(s,  input_dictionary = False, output_dictionary = False):
     """Takes in string S and outputs and ancoded sring"""
+    input_alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
     encode_length = length_for_binary(len(input_alphabet))
     if not input_dictionary:
         dic = MakeBinaryDictionary(input_alphabet)
@@ -195,7 +196,7 @@ def lzDecoder(lst):
 
 
 
-#def zipper(s1,s2):
+def zipper(s1,s2):
     oupt = ""
     i = 0
     while i < len(s1):
@@ -207,48 +208,44 @@ def lzDecoder(lst):
         oupt = oupt + s2[i]
         i = i+ 1
     return(oupt)
-def zipper(s1,s2):
-    """Binary Zipper"""
-    oupt = ""
-    for i in range(len(s1)):
-        oupt += str(int(s1[i])*1 + int(s2[i])*2)
-    return(oupt)
+#def zipper(s1,s2):
+#    """Binary Zipper"""
+#    oupt = ""
+#    for i in range(len(s1)):
+#        oupt += str(int(s1[i])*1 + int(s2[i])*2)
+#    return(oupt)
 
-def lzCompression_ratio(s, ia = [0,1]):
-    return(len("".join(lzEncoder(s, input_alphabet = ia)))/len(s))
+def lzCompression_ratio(s):
+    return(len("".join(lzEncoder(s)))/len(s))
 
 
 def Mutual_Compression_ratio(s1,s2, zip = False):
     if zip:
         s12 = zipper(s1,s2)
-        ia = [0,1,2,3]
 
     else:
         s12 = s1 + s2
-        ia = [0,1]
-    return(lzCompression_ratio(s1, ia = ia)+lzCompression_ratio(s2, ia= ia)-2*lzCompression_ratio(s12, ia = ia))
+    return(lzCompression_ratio(s1)+lzCompression_ratio(s2)-2*lzCompression_ratio(s12))
 
 def Mutual_Compression_ratio1(s1,s2):
-    ia = [0,1]
-    return(lzCompression_ratio(s1, ia = ia)+lzCompression_ratio(s2, ia= ia)-Conditional_Comrpession(s1,s2))
+    return(lzCompression_ratio(s1)+lzCompression_ratio(s2)-Conditional_Comrpession(s1,s2))
 
 
 
 
 def Mutual_Compression_Crossed(s1,s2):
-    (s1Encoded,s1Dic) = lzEncoder(s1, input_alphabet = [0,1], input_dictionary = False, output_dictionary = True)
-    (s2Encoded,s2Dic) = lzEncoder(s2, input_alphabet = [0,1], input_dictionary = False, output_dictionary = True)
+    (s1Encoded,s1Dic) = lzEncoder(s1, input_dictionary = False, output_dictionary = True)
+    (s2Encoded,s2Dic) = lzEncoder(s2,  input_dictionary = False, output_dictionary = True)
 
-    (s1Encoded2,s1Dic2) = lzEncoder(s1, input_alphabet = [0,1], input_dictionary = s2Dic, output_dictionary = True)
-    (s2Encoded2,s2Dic2) = lzEncoder(s2, input_alphabet = [0,1], input_dictionary = s1Dic, output_dictionary = True)
+    (s1Encoded2,s1Dic2) = lzEncoder(s1,  input_dictionary = s2Dic, output_dictionary = True)
+    (s2Encoded2,s2Dic2) = lzEncoder(s2,  input_dictionary = s1Dic, output_dictionary = True)
 
     return(
         (len("".join(s1Encoded2)) + len("".join(s2Encoded2)))/(len(s1)+len(s2))# try deviding by n instead of 2n
     )
 
 def Mutual_Compression_ratio_Crossed(s1,s2):
-    ia = [0,1]
-    return(lzCompression_ratio(s1, ia = ia)+lzCompression_ratio(s2, ia= ia)-Mutual_Compression_Crossed(s1,s2))
+    return(lzCompression_ratio(s1)+lzCompression_ratio(s2)-Mutual_Compression_Crossed(s1,s2))
 
 def Conditional_Comrpession(s2,s1):
     (s1Encoded,s1Dic) = lzEncoder(s1, output_dictionary = True)
@@ -256,12 +253,12 @@ def Conditional_Comrpession(s2,s1):
     return(len("".join(s12Encoded))/ len(s1))
 
 
-def Mutual_Compression_ratio2(s1,s2):
+def Mutual_Compression_ratio_Conditional(s1,s2):
     return(lzCompression_ratio(s2)-Conditional_Comrpession(s1,s2))
 
-s1 = "00"*5000
-s2 = "1011"*2500
-print(Mutual_Compression_ratio2(s1,s2))
+#s1 = "00"*5000
+#s2 = "1011"*2500
+#print(Mutual_Compression_ratio2(s1,s2))
 
 """A = ["#","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W", "X", "Y","Z"]
 s = "TOBEORNOTTOBEORTOBEORNOT"

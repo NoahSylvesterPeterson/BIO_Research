@@ -1,6 +1,7 @@
 from math import floor, log2
 
-def lzEncoderAdvanced(s, input_alphabet = [0,1]):
+#def lzEncoderAdvanced(s, input_alphabet = [0,1]):
+def lzEncoderAdvanced(s, input_alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]):
     """ s = input string
         input_aplhabet = alphabet used for sting s, defalted to binary
         input_dictionary = optional starting dictionary different from just the alphabet
