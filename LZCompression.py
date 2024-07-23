@@ -143,6 +143,11 @@ def isInDict(s,d):
 def lzEncoder(s,  input_dictionary = False, output_dictionary = False):
     """Takes in string S and outputs and ancoded sring"""
     input_alphabet = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
+    """ s = input string
+            input_aplhabet = alphabet used for sting s
+            input_dictionary = optional starting dictionary different from just the alphabet
+            output_dictionary = boolian, if true the encoder with output a tuple of the encoded string and the final state of the dictionary
+        Takes in string S and outputs and ancoded sring"""
     encode_length = length_for_binary(len(input_alphabet))
     if not input_dictionary:
         dic = MakeBinaryDictionary(input_alphabet)
@@ -170,8 +175,6 @@ def lzEncoder(s,  input_dictionary = False, output_dictionary = False):
         i +=1
 
     oupt.append(dic[curr])
-    #print(dic)
-    #print(oupt[1:])
     if not output_dictionary:
         return(oupt[1:])
     else:
